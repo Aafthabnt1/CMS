@@ -7,22 +7,17 @@ import java.math.BigDecimal;
 
 @Data
 public class Details implements Serializable {
-    private Long productId;
-    private BigDecimal productDiscount;
+    private String productCode;
 
-    public Long getProductId() {
-        return productId;
+
+    public String getProductCode() {
+        return productCode;
     }
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
+    public void setProductCode(String productCode) {
+        this.productCode = productCode;
     }
 
-    public BigDecimal getProductDiscount() {
-        return productDiscount;
-    }
 
-    public void setProductDiscount(BigDecimal productDiscount) {
-        this.productDiscount = productDiscount;
-    }
+
 }

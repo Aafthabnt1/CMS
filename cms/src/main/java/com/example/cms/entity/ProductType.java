@@ -3,7 +3,7 @@ package com.example.cms.entity;
 public enum ProductType {
     ELECTRONIC("ELECTRONIC"),
     FURNITURE("FURNITURE"),
-    HOUSE_ITEM("HouseItem");
+    HOUSE_ITEM("HOUSEITEM");
     //etc based on scenerios we can add the types
     private String type;
      ProductType(String type){

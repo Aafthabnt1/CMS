@@ -1,9 +1,9 @@
 package com.example.cms.entity;
 
 public enum CouponType {
-    CART_WISE("Cart-wise"),
-    PRODUCT_WISE("Product-wise"),
-    BUY_X_GET_Y("BxGy");
+    Cart_wise("Cart_wise"),
+    Product_wise("Product_wise"),
+    BxGy("BxGy");
 
     private String couponType;
     CouponType(String s) {
@@ -13,4 +13,6 @@ public enum CouponType {
     public String getCouponType() {
         return couponType;
     }
+
+
 }

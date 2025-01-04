@@ -24,11 +24,12 @@ public class Coupon extends BaseClass implements Serializable {
     @Column(name="cart_discount")
     private BigDecimal discountPercentage;
 
-    @Column(name="threshold_amount",nullable = false)
+    @Column(name="threshold_amount")
     private BigDecimal thresholdAmount;
 
-    @Column(name="coupon_type")
+
     @Enumerated(EnumType.STRING)
+    @Column(name="coupon_type")
     private CouponType couponType;
 
     @Column(name="expired_date")
@@ -43,7 +44,7 @@ public class Coupon extends BaseClass implements Serializable {
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name="product_wise_product_id_details",columnDefinition = "json")
-    private Set<Details> productID;
+    private Set<Details> productCodes;
 
     public Long getCouponId() {
         return couponId;
@@ -109,11 +110,11 @@ public class Coupon extends BaseClass implements Serializable {
         this.bxgyProducts = bxgyProducts;
     }
 
-    public Set<Details> getProductID() {
-        return productID;
+    public Set<Details> getProductCodes() {
+        return productCodes;
     }
 
-    public void setProductID(Set<Details> productID) {
-        this.productID = productID;
+    public void setProductCodes(Set<Details> productCodes) {
+        this.productCodes = productCodes;
     }
 }

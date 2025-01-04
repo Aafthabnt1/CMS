@@ -1,6 +1,8 @@
 package com.example.cms.controller;
 
 import com.example.cms.dto.CouponDto;
+import com.example.cms.dto.EligibleCouponRespDto;
+import com.example.cms.dto.ShoppingCartDto;
 import com.example.cms.entity.Coupon;
 import com.example.cms.exceptions.CMSCustomException;
 import com.example.cms.service.CouponService;
@@ -8,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/coupons")
@@ -58,5 +61,11 @@ public class CouponController {
             throw new CMSCustomException(ex.getMessage());
         }
     }
+
+    @PostMapping("/applicable-coupons")
+    public Set<EligibleCouponRespDto> getEligibleCoupons(@RequestBody ShoppingCartDto cartDetails){
+        return couponService.findEligibleCoupons(cartDetails);
+    }
+
 
 }

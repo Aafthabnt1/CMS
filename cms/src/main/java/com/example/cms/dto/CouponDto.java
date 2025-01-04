@@ -3,6 +3,7 @@ package com.example.cms.dto;
 import com.example.cms.entity.BXGYProducts;
 import com.example.cms.entity.CouponType;
 import com.example.cms.entity.Details;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Set;
 @Data
 public class CouponDto implements Serializable {
@@ -19,10 +21,11 @@ public class CouponDto implements Serializable {
     private BigDecimal discountPercentage;
     private BigDecimal thresholdAmount;
     private String couponType;
+
     private LocalDateTime expiryDate;
     private int repetitionLimit;
     private BXGYProducts bxgyProducts;
-    private Set<Details> productID;
+    private Set<Details> productCodes;
 
     public Long getCouponId() {
         return couponId;
@@ -88,11 +91,11 @@ public class CouponDto implements Serializable {
         this.bxgyProducts = bxgyProducts;
     }
 
-    public Set<Details> getProductID() {
-        return productID;
+    public Set<Details> getProductCodes() {
+        return productCodes;
     }
 
-    public void setProductID(Set<Details> productID) {
-        this.productID = productID;
+    public void setProductCodes(Set<Details> productCodes) {
+        this.productCodes = productCodes;
     }
 }
