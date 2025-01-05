@@ -12,7 +12,7 @@
 - [x] Fetch all applicable coupons for a given cart and calculate the total discount that will be applied by each coupon.
 - [ ] Apply a specific coupon to the cart and return the updated cart with discounted prices for each item(yet to be done).
 - [x] Implement unit tests(I have implemented the junit and written 1 testcases in future I can add more test case coverage).
-- [x] Add expiration dates for coupons.(Provided the provision for it In code I am not using it.
+- [x] Add expiration dates for coupons.(Provided the provision for it In code I am not using it.)
 
 ### Assumptions:
 - I am assuming we will have ui page from where we will try to add the new coupons when clicked on save it will create new coupons.
