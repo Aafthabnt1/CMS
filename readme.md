@@ -1,10 +1,32 @@
-# For Good Visual appearance click on Preview Mode top left side.
+# COUPONS MANAGEMENT SYSTEM
 
-| Technology Used | DataBase |
-|----------------|-----------
-| ***Java,SpringBoot*** | ***h2***      |
+| Technology Used | DataBase | Testing FrameWork
+|----------------|-----------|----------------|
+| ***Java,SpringBoot*** | ***h2***      | ***Junit,Mockito***
 
+- [x] Create a new coupon.
+- [x] Retrieve all coupons.
+- [x] Retrieve a specific coupon by its ID.
+- [x] Update a specific coupon by its ID.
+- [x] Delete a specific coupon by its ID.
+- [x] Fetch all applicable coupons for a given cart and calculate the total discount that will be applied by each coupon.
+- [ ] Apply a specific coupon to the cart and return the updated cart with discounted prices for each item(yet to be done).
+- [x] Implement unit tests(I have implemented the junit and written 1 testcases in future I can add more test case coverage).
+- [x] Add expiration dates for coupons.(Provided the provision for it In code I am not using it.
 
+### Assumptions:
+- I am assuming we will have ui page from where we will try to add the new coupons when clicked on save it will create new coupons.
+- In ui based on catagory type of coupon some fileds will be hide un-hide ex: if the user is adding Product-wise coupon then wwe use productCodes attribute and bxgy we use bxgyproducts.
+- I have designed the system in such a way that if you add same coupon code again as new coupon it will not except, we can edit the existing one.
+- While selecting the cart I have assumed there is different products table which have info of all product only we us this db to store the cart items and how much is its discount. 
+
+### Limitations
+- I need to implement Apply a specific coupon to the cart and return the updated cart with discounted prices for each item.
+- I have validated happy flow scenarios but unexpedted scenerios can happen I need to work on it.
+- Need to strengthen the validation based on business Scenerios.
+- Now when user try to fetch all coupons it will show all coupons, even the expired one.
+
+  
 **Implemented Cases**
 
 **Assumption**:I have assumed that main product items details tabel is already present user is selecting the product from there and adding it in cart that product I am considering it.  
