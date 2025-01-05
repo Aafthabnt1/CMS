@@ -14,6 +14,7 @@
 - [x] Implement unit tests(I have implemented the junit and written 1 testcases in future I can add more test case coverage).
 - [x] Add expiration dates for coupons.(Provided the provision for it In code I am not using it.)
 
+
 ### Assumptions:
 - I am assuming we will have ui page from where we will try to add the new coupons when clicked on save it will create new coupons.
 - In ui based on catagory type of coupon some fileds will be hide un-hide ex: if the user is adding Product-wise coupon then wwe use productCodes attribute and bxgy we use bxgyproducts.
@@ -26,6 +27,9 @@
 - Need to strengthen the validation based on business Scenerios.
 - Now when user try to fetch all coupons it will show all coupons, even the expired one.
 
+### Things to remember
+- DB userName:cms password:sde2
+- On every run of application the the data gets deleted in H2 db so if you want to test my scenerios first upload the coups based on the below request showed.
   
 **Implemented Cases**
 
@@ -173,9 +177,6 @@ If every thing is good the coupons get saved in h2 database and return same obje
         "productCodes": null
     }
 ```
----
-some extra use cases I have uploaded the images
-
 ---
 
 - # **GET /coupons: Retrieve all coupons**
