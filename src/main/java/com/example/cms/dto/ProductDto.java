@@ -26,9 +26,9 @@ public class ProductDto implements Serializable {
 
     private int productQuantity;
 
-    private String coupon_discount;
+    private String couponDiscountPrice;
 
-    private String coupon_used;
+    private String couponUsed;
 
     public long getProductId() {
         return productId;
@@ -86,19 +86,19 @@ public class ProductDto implements Serializable {
         this.productQuantity = productQuantity;
     }
 
-    public String getCoupon_discount() {
-        return coupon_discount;
+    public String getCouponDiscountPrice() {
+        return couponDiscountPrice;
     }
 
-    public void setCoupon_discount(String coupon_discount) {
-        this.coupon_discount = coupon_discount;
+    public void setCouponDiscountPrice(String couponDiscountPrice) {
+        this.couponDiscountPrice = couponDiscountPrice;
     }
 
-    public String getCoupon_used() {
-        return coupon_used;
+    public String getCouponUsed() {
+        return couponUsed;
     }
 
-    public void setCoupon_used(String coupon_used) {
-        this.coupon_used = coupon_used;
+    public void setCouponUsed(String couponUsed) {
+        this.couponUsed = couponUsed;
     }
 }

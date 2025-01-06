@@ -106,16 +106,13 @@ public class CouponService {
         bxgyCoupons.stream().forEach(
                 coupon -> {
                     Set<String> buyProductsEligible=new HashSet<>();
-                    Set<String> freeProductsEligible=new HashSet<>();
                     var productCodes=coupon.getBxgyProducts().getProductCode();
                     var freeProductCodes=coupon.getBxgyProducts().getGiveFreeProductCode();
                     cartDetails.getProducts().stream().forEach(cartProduct->{
                         var eligibleProduct= productCodes.stream().filter(code->cartProduct.getProductCode().equals(code)).findAny();
-                        var freeProduct= freeProductCodes.stream().filter(code->cartProduct.getProductCode().equals(code)).findAny();
                         eligibleProduct.ifPresent(buyProductsEligible::add);
-                        freeProduct.ifPresent(freeProductsEligible::add);
                     });
-                    if(buyProductsEligible.size()>2 && freeProductsEligible.size()>=1){
+                    if(buyProductsEligible.size()>2 ){
                         eligibleCoupons.add(coupon);
                     }
                 }
@@ -163,5 +160,144 @@ public class CouponService {
             throw new CMSCustomException("Please check the price and quantity");
         }
         return finalAmount;
+    }
+
+    public ShoppingCartDto getCouponDiscount(ShoppingCartDto cartDetails, Long couponId) {
+        var coupon=couponRepository.findById(couponId);
+        if(coupon.isPresent()){
+           return calculateDiscountPrice(cartDetails,coupon);
+        }else{
+            return calculateWithOutDiscount(cartDetails);
+        }
+
+    }
+
+    private ShoppingCartDto calculateWithOutDiscount(ShoppingCartDto cartDetails) {
+        cartDetails.setTotalPrice(calculateCartPrice(cartDetails));
+        return cartDetails;
+    }
+
+    private ShoppingCartDto calculateDiscountPrice(ShoppingCartDto cartDetails, Optional<Coupon> coupon) {
+        var cartTotalPrice=calculateCartPrice(cartDetails);
+        if(Objects.isNull(getCouponTypes(coupon.get()))){
+            calculateWithOutDiscount(cartDetails);
+        }else{
+            if(coupon.get().getCouponType()==CouponType.Cart_wise){
+                cartDetails.setTotalPrice(cartTotalPrice);
+                if(cartDetails.getTotalPrice().compareTo(coupon.get().getThresholdAmount())>0) {
+                    cartDetails.setTotalDiscountPrice(calculateDiscount(cartDetails.getTotalPrice(), coupon.get().getDiscountPercentage()));
+                    cartDetails.setFinalPrice(calculateFinalAmount(cartDetails.getTotalPrice(), cartDetails.getTotalDiscountPrice()));
+                }
+            }else if(coupon.get().getCouponType()==CouponType.Product_wise){
+                cartDetails.setTotalPrice(cartTotalPrice);
+                cartDetails.setFinalPrice(applyProductWiseCoupon(coupon.get(),  cartDetails.getProducts()));
+                cartDetails.setTotalDiscountPrice(cartDetails.getTotalPrice().subtract(cartDetails.getFinalPrice()));
+            }else if(coupon.get().getCouponType()==CouponType.BxGy){
+                   // boolean a=findByTwoGetOneProductIsEligibleOrNot(coupon.get().getBxgyProducts(),cartDetails.getProducts(),coupon.get().getRepetitionLimit(),cartDetails.getFreeProducts());
+                //TODO:commented the code
+                //TODO:need to add the logic when bxgy catagory coupon are used
+            }
+        }
+        return cartDetails;
+    }
+
+//    private boolean findByTwoGetOneProductIsEligibleOrNot(BXGYProducts bxgyProducts, List<ProductDto> products, int repetitionLimit,List<ProductDto> freeProducts) {
+//        var purchaseOffer=bxgyProducts.getProductCode();
+//        var freeOffer=bxgyProducts.getGiveFreeProductCode();
+//        List<String>getCountOfAllProductInCart=new ArrayList<>();
+//        for(var product:products){
+//            getCountOfAllProductInCart.add(product.getProductCode());
+//        }
+//        var filterUniqueProductsCount=getCountOfAllProductInCart.stream().distinct().count();
+//        var matchingProductCount=products.stream().filter(product ->purchaseOffer.contains(product.getProductCode())).count();
+//        var freeProductGiveAwayCount=matchingProductCount/2;
+//        if(freeProductGiveAwayCount>0 && freeProductGiveAwayCount<freeOffer.size()){
+//            checkAnyFreeProductsAreEligibleInCarts(products,repetitionLimit,filterUniqueProductsCount,freeOffer);
+//        }
+//
+//
+//
+//
+//
+//
+//        if(freeProductGiveAwayCount>0 && freeProductGiveAwayCount<freeOffer.size()){
+//            //assuming the free product is part of cart then we add extra quantity else the product is different we will fetch that product from product DB and add in our Product list
+//            var getFreeProductFromCart=products.stream().filter(product -> freeOffer.contains(product.getProductCode())).toList();
+//            if(freeProductGiveAwayCount>repetitionLimit) {//if the get product reaches more than repetition limit restrict to repetition limit.
+//               if(!getFreeProductFromCart.isEmpty() && getFreeProductFromCart.size()<filterUniqueProductsCount){
+//                   for(int i=0;i<getFreeProductFromCart.size();i++){
+//                       int addQuantity=1;
+//                       freeProducts.add(getFreeProductFromCart.get(i));
+//
+//                       freeProducts.get(i).setProductQuantity(freeProducts.get(i).getProductQuantity()+addQuantity);
+//                   }
+//               }else if(getFreeProductFromCart.size()>filterUniqueProductsCount ){
+//                   if(filterUniqueProductsCount>repetitionLimit){
+//                       for(int i=0;i<repetitionLimit;i++){
+//                           getFreeProductFromCart.get(i).setProductQuantity(getFreeProductFromCart.get(i).getProductQuantity()+1);
+//                       }
+//                   }else{
+//                       for(int i=0;i<repetitionLimit;i++){
+//                           getFreeProductFromCart.get(i).setProductQuantity(getFreeProductFromCart.get(i).getProductQuantity()+1);
+//                       }
+//                   }
+//               }
+//           }else if(getFreeProductFromCart.size()==0){//cart item do not have free product so we need to get take coups free product id and set it in cart product list
+//
+//            }else if(getFreeProductFromCart.size()!=0){
+//                getFreeProductFromCart.get(0).setProductQuantity((int) (getFreeProductFromCart.get(0).getProductQuantity()+freeProductGiveAwayCount));
+//            }
+//        }
+//    }
+
+    private void checkAnyFreeProductsAreEligibleInCarts(List<ProductDto> products, int repetitionLimit, long filterUniqueProductsCount, List<String> freeOffer) {
+        var getFreeProductFromCart=products.stream().filter(product -> freeOffer.contains(product.getProductCode())).toList();
+
+    }
+
+    private BigDecimal calculateFinalAmount(BigDecimal totalPrice, BigDecimal totalDiscountPrice) {
+        return totalPrice.subtract(totalDiscountPrice);
+    }
+
+    private BigDecimal calculateDiscount(BigDecimal totalPrice,BigDecimal discountPercentage) {
+        return totalPrice.multiply(BigDecimal.valueOf(100).subtract(discountPercentage)).multiply(BigDecimal.valueOf(0.01));
+    }
+
+    private BigDecimal applyProductWiseCoupon(Coupon coupon, List<ProductDto> products) {
+        BigDecimal totalProductPrice = BigDecimal.ZERO;
+        List<BigDecimal>collectProductPrice=new ArrayList<>();
+
+        if(!products.isEmpty()){
+            products.forEach(product ->{
+
+                    if(coupon.getProductCodes().stream().anyMatch(couponProductCode->couponProductCode.getProductCode().equals(product.getProductCode()))){
+                        var productPrice=calculateProductPriceWithQuantity(product.getProductPrice(),product.getProductQuantity());
+                        product.setCouponDiscountPrice(String.valueOf(productPrice.multiply(coupon.getDiscountPercentage()).multiply(BigDecimal.valueOf(0.01))));
+                        product.setCouponUsed(coupon.getCouponCode());
+                        collectProductPrice.add(calculateDiscount(productPrice,coupon.getDiscountPercentage()));
+                    }else{
+                        collectProductPrice.add(calculateProductPriceWithQuantity(product.getProductPrice(),product.getProductQuantity()));
+                    }
+            } );
+        }
+
+        return collectProductPrice.stream().reduce(BigDecimal::add).get();
+    }
+
+    private BigDecimal calculateProductPriceWithQuantity(BigDecimal productPrice, int productQuantity) {
+        return productPrice.multiply(BigDecimal.valueOf(productQuantity));
+    }
+
+
+    private CouponType getCouponTypes(Coupon coupon) {
+        if(coupon.getCouponType()==CouponType.Cart_wise){
+            return CouponType.Cart_wise;
+        }else if(coupon.getCouponType()==CouponType.Product_wise){
+            return CouponType.Product_wise;
+        } else if (coupon.getCouponType()==CouponType.BxGy) {
+            return CouponType.BxGy;
+        }else {
+            return null;
+        }
     }
 }
