@@ -28,11 +28,11 @@ public class Products extends BaseClass implements Serializable {
     private ProductType productType;
     @Column(name="product_quantity")
     private int productQuantity;
-    @Column(name="coupon_discount")
-    private String coupon_discount;
+    @Column(name="coupon_discount_price")
+    private String couponDiscountPrice;
 
     @Column(name="coupon_used")
-    private String coupon_used;
+    private String couponUsed;
 
 
 }

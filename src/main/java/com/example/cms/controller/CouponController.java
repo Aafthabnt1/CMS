@@ -67,5 +67,10 @@ public class CouponController {
         return couponService.findEligibleCoupons(cartDetails);
     }
 
+    @PostMapping("/applicable-coupon/{id}")
+    public ShoppingCartDto calculateCouponDiscount(@RequestBody ShoppingCartDto cartDetails,@PathVariable(value = "id") Long couponId){
+        return couponService.getCouponDiscount(cartDetails,couponId);
+    }
+
 
 }
